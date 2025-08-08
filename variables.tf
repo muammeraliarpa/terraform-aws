@@ -10,7 +10,7 @@ variable "instance_type" {
 
 variable "key_name" {
   description = "SSH anahtar çifti adı"
-  default     = "my-aws-key"
+  default     = "terraform-ssh-key"
 }
 
 variable "public_key" {
