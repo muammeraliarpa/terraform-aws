@@ -12,3 +12,8 @@ variable "key_name" {
   description = "SSH anahtar çifti adı"
   default     = "my-aws-key"
 }
+
+variable "public_key" {
+  description = "SSH public key content"
+  type        = string
+}
