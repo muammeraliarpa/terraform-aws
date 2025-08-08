@@ -10,7 +10,9 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'terraform-ssh-key', variable: 'PUBLIC_KEY')]) {
                     sh 'echo "$PUBLIC_KEY" > id_rsa.pub'
-                    env.TF_VAR_public_key = PUBLIC_KEY
+                    script {
+                        env.TF_VAR_public_key = PUBLIC_KEY
+                    }
                 }
             }
         }
