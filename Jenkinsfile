@@ -45,10 +45,11 @@ pipeline {
                         sh """
                             ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" ubuntu@${publicIp} 'sudo apt update -y && sudo apt upgrade -y'
                         """
+                        sh 'touch deneme.txt'
                     }
                 }
             }
         }
     }
-}
+u}
 
