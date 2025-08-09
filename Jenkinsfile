@@ -30,21 +30,25 @@ pipeline {
                 }
             }
         }
-         stage('Get Public IP and Update Server') {
-            steps {
-                script {
-                    // Terraform output'tan IP çekiliyor
-                    def publicIp = sh(script: 'terraform output -raw public_ip', returnStdout: true).trim()
-                    echo "Ubuntu sunucusu başarıyla oluşturuldu. Public IP: ${publicIp}"
 
-                    sshCommand remote: [
-                        name: 'aws-server',
-                        host: publicIp,
-                        user: 'ubuntu',
-                        identity: credentials('terraform-ssh-key') 
-                    ], command: "sudo apt update -y && sudo apt upgrade -y"
+
+        stage('Get Public IP and Update Server') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'terraform-ssh-private-key', keyFileVariable: 'SSH_KEY')]) {
+                    script {
+                        def publicIp = sh(script: 'terraform output -raw public_ip', returnStdout: true).trim()
+                        echo "Ubuntu sunucusu başarıyla oluşturuldu. Public IP: ${publicIp}"
+
+                        sh 'chmod 400 "$SSH_KEY"'
+
+                        // SSH ile bağlanıp komutları çalıştırıyoruz
+                        sh """
+                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" ubuntu@${publicIp} 'sudo apt update -y && sudo apt upgrade -y'
+                        """
+                    }
                 }
             }
         }
     }
 }
+
