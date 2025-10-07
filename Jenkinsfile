@@ -41,7 +41,6 @@ pipeline {
 
                         sh 'chmod 400 "$SSH_KEY"'
 
-                        // SSH ile bağlanıp komutları çalıştırıyoruz
                         sh """
                             ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" ubuntu@${publicIp} 'sudo apt update -y && sudo apt upgrade -y'
                         """
